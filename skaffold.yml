@@ -1,0 +1,42 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infrastructure/k8s/*
+build:
+  local:
+    push: false 
+  artifacts:
+    - image: gearthlogic/auth-service
+      context: auth-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: gearthlogic/ticketing-client
+      context: client-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: gearthlogic/tickets-service
+      context: tickets-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: gearthlogic/orders-service
+      context: orders-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
